@@ -1,6 +1,6 @@
 import "dotenv/config";
 import express from "express";
-import authRoutes from "./routes/auth.routes.js"
+import authRoutes from "./routes/auth.routes.js";
 import connectDB from "./db/connectDB.js";
 import mongoose from "mongoose";
 
@@ -8,6 +8,8 @@ const app = express();
 const port = process.env.PORT || 8081;
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 app.use("/api/auth", authRoutes);
 
 app.get("/", (_req, res) => {
