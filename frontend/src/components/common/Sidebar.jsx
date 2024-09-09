@@ -118,23 +118,25 @@ const Sidebar = () => {
           </ul>
         </div>
         {authUser && (
-          <NavLink
-            to={`/profile/${authUser.username}`}
-            className="relative my-3 flex md:gap-3 gap-0 items-start transition-all duration-300 hover:bg-[#181818] p-3 rounded-full"
-          >
-            <div className="avatar">
-              <div className="w-10 h-10 rounded-full">
-                <img src={authUser?.profileImg || "/avatars/sloth.png"} />
+          <div className="my-3 flex md:gap-3 gap-0 justify-between items-start transition-all duration-300 hover:bg-[#181818] p-3 rounded-full">
+            <NavLink
+              to={`/profile/${authUser.username}`}
+              className="flex items-center gap-3"
+            >
+              <div className="avatar">
+                <div className="w-10 h-10 rounded-full">
+                  <img
+                    src={authUser?.profileImg || "/avatar-placeholder.png"}
+                  />
+                </div>
               </div>
-            </div>
-            <div className="flex justify-between flex-1">
               <div className="hidden md:block">
                 <p className="text-white font-bold text-sm w-20 truncate">
                   {authUser?.fullName}
                 </p>
                 <p className="text-slate-500 text-sm">@{authUser?.username}</p>
               </div>
-            </div>
+            </NavLink>
             <div className="flex justify-center items-center h-full">
               <div className="dropdown dropdown-top dropdown-start">
                 <div tabIndex={0}>
@@ -142,7 +144,7 @@ const Sidebar = () => {
                 </div>
                 <ul
                   tabIndex={0}
-                  className="dropdown-content menu bg-base-100 rounded-box z-[1] w-40 p-2 shadow border border-gray-700"
+                  className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow border border-gray-700"
                 >
                   <li>
                     <div
@@ -158,7 +160,7 @@ const Sidebar = () => {
                 </ul>
               </div>
             </div>
-          </NavLink>
+          </div>
         )}
       </div>
     </div>
