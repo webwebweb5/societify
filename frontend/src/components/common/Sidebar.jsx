@@ -44,7 +44,7 @@ const Sidebar = () => {
 
   return (
     <div className="md:flex-[2_2_0] max-w-[275px] px-2">
-      <div className="sticky top-0 left-0 flex flex-col justify-between h-screen md:w-full">
+      <div className="sticky top-0 left-0 flex flex-col justify-between max-md:items-center h-screen md:w-full">
         <div className="">
           <NavLink to="/" className="flex justify-center md:justify-start py-2">
             <SocietifySvg className="px-2 w-12 h-12 rounded-full fill-white hover:bg-stone-900" />
@@ -54,7 +54,7 @@ const Sidebar = () => {
               <NavLink
                 to="/"
                 className={({ isActive }) =>
-                  `flex gap-4 items-center hover:bg-stone-900 transition-all rounded-full duration-400 py-2 pl-2 pr-4 max-w-fit cursor-pointer ${
+                  `flex gap-4 items-center hover:bg-stone-900 transition-all rounded-full duration-400 py-2 pl-2 md:pr-4 pr-2 max-w-fit cursor-pointer ${
                     isActive ? "font-bold" : ""
                   }`
                 }
@@ -75,7 +75,7 @@ const Sidebar = () => {
               <NavLink
                 to="/notifications"
                 className={({ isActive }) =>
-                  `flex gap-4 items-center hover:bg-stone-900 transition-all rounded-full duration-300 py-2 pl-2 pr-4 max-w-fit cursor-pointer ${
+                  `flex gap-4 items-center hover:bg-stone-900 transition-all rounded-full duration-300 py-2 pl-2 md:pr-4 pr-2 max-w-fit cursor-pointer ${
                     isActive ? "font-bold" : ""
                   }`
                 }
@@ -98,7 +98,7 @@ const Sidebar = () => {
               <NavLink
                 to={`/profile/${authUser?.username}`}
                 className={({ isActive }) =>
-                  `flex gap-4 items-center hover:bg-stone-900 transition-all rounded-full duration-300 py-2 pl-2 pr-4 max-w-fit cursor-pointer ${
+                  `flex gap-4 items-center hover:bg-stone-900 transition-all rounded-full duration-300 py-2 pl-2 md:pr-4 pr-2 max-w-fit cursor-pointer ${
                     isActive ? "font-bold" : ""
                   }`
                 }
@@ -131,7 +131,7 @@ const Sidebar = () => {
                 </div>
               </div>
               <div className="hidden md:block">
-                <p className="text-white font-bold text-sm w-20 truncate">
+                <p className="text-white font-bold text-sm w-full truncate">
                   {authUser?.fullName}
                 </p>
                 <p className="text-slate-500 text-sm">@{authUser?.username}</p>

@@ -75,40 +75,31 @@ export const followUnFollowUser = async (req, res) => {
 };
 
 export const getSuggestedUsers = async (req, res) => {
-  try {
-    const currentUserId = req.user._id;
+	try {
+		const userId = req.user._id;
 
-    // Retrieve the IDs of users followed by the current user
-    const { following: followedUserIds } = await User.findById(
-      currentUserId
-    ).select("following");
+		const usersFollowedByMe = await User.findById(userId).select("following");
 
-    // Aggregate pipeline to find suggested users
-    const suggestedUsers = await User.aggregate([
-      {
-        $match: {
-          _id: { $ne: currentUserId }, // Exclude the current user
-          _id: { $nin: followedUserIds }, // Exclude already followed users
-        },
-      },
-      { $sample: { size: 10 } }, // Sample a larger set to ensure diversity
-      {
-        $project: {
-          password: 0, // Exclude password field from the results
-        },
-      },
-    ]);
+		const users = await User.aggregate([
+			{
+				$match: {
+					_id: { $ne: userId },
+				},
+			},
+			{ $sample: { size: 10 } },
+		]);
 
-    // Limit the number of users to 4
-    const topSuggestions = suggestedUsers.slice(0, 4);
+		// 1,2,3,4,5,6,
+		const filteredUsers = users.filter((user) => !usersFollowedByMe.following.includes(user._id));
+		const suggestedUsers = filteredUsers.slice(0, 4);
 
-    res.status(200).json(topSuggestions);
-  } catch (error) {
-    console.error("Error in getSuggestedUsers: ", error.message);
-    res
-      .status(500)
-      .json({ error: "An error occurred while fetching suggested users." });
-  }
+		suggestedUsers.forEach((user) => (user.password = null));
+
+		res.status(200).json(suggestedUsers);
+	} catch (error) {
+		console.log("Error in getSuggestedUsers: ", error.message);
+		res.status(500).json({ error: error.message });
+	}
 };
 
 export const updateUser = async (req, res) => {
