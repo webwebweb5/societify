@@ -5,7 +5,12 @@ import { MdOutlineMail } from "react-icons/md";
 import { MdPerson } from "react-icons/md";
 import { MdPassword } from "react-icons/md";
 import { MdDriveFileRenameOutline } from "react-icons/md";
+
 import SocietifySvg from "../../../components/svgs/societify";
+
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+
+import toast from "react-hot-toast";
 
 const SignUpPage = () => {
   const [formData, setFormData] = useState({
@@ -15,16 +20,42 @@ const SignUpPage = () => {
     password: "",
   });
 
+  const queryClient = useQueryClient();
+
+  const { mutate, isError, isPending, error } = useMutation({
+    mutationFn: async ({ email, username, fullName, password }) => {
+      try {
+        const res = await fetch("/api/auth/sign-up", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email, username, fullName, password }),
+        });
+
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || "Failed to create account");
+        console.log(data);
+        return data;
+      } catch (error) {
+        console.error(error);
+        throw error;
+      }
+    },
+    onSuccess: () => {
+      toast.success("Account created successfully");
+      queryClient.invalidateQueries({ queryKey: ["authUser"] });
+    },
+  });
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(formData);
+    mutate(formData);
   };
 
   const handleInputChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
-
-  const isError = false;
 
   return (
     <div className="max-w-screen-xl mx-auto flex h-screen px-10">
@@ -40,9 +71,7 @@ const SignUpPage = () => {
           <div>
             <h1 className="text-2xl font-medium text-neutral-300">
               Sign up to{" "}
-              <span className="font-bold">
-              &ldquo;Societify&rdquo;
-              </span>
+              <span className="font-bold">&ldquo;Societify&rdquo;</span>
             </h1>
             <p className="max-w-sm text-neutral-400 text-sm">
               A modern social media application.
@@ -94,10 +123,10 @@ const SignUpPage = () => {
               value={formData.password}
             />
           </label>
+          {isError && <p className="text-red-500">{error?.message || "An unknown error occurred."}</p>}
           <button className="btn rounded-full btn-primary text-white">
-            Sign up
+            {isPending ? "Loading..." : "Sign up"}
           </button>
-          {isError && <p className="text-red-500">Something went wrong</p>}
         </form>
         <div className="flex justify-center items-center gap-2 mt-4">
           <p className="text-white">Already have an account?</p>
